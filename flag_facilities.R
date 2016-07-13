@@ -58,8 +58,21 @@ for(i in 1:length(unique_facility)){
   M2_t_pre2 <- inf_x(M2_t_pre)
   M1_t=M1_t_pre2-facility$O_E+c1*facility$expectda+h1
   M2_t=M2_t_pre2+facility$O_E-c2*facility$expectda+h2
+  
+  for (j in 1:(length(M1_t)-1)) {
+    if (M1_t[j]<0)  for (k in (j+1):length(M1_t)) {
+      M1_t_pre2[k]=min(M1_t_pre2[k], -h1/2)
+    }
+    if (M2_t[j]<0) for (k in (j+1):length(M1_t)) {
+      M2_t_pre2[k]=max(M2_t_pre2[k], -h2/2)
+    }
+  }
+  
+  M1_t=M1_t_pre2-facility$O_E+c1*facility$expectda+h1
+  M2_t=M2_t_pre2+facility$O_E-c2*facility$expectda+h2
   O_E_upper=facility$O_E+M1_t
   O_E_lower=facility$O_E-M2_t
+  
   if(TRUE %in% (facility$O_E>O_E_upper)){
     alarm$upper_alarm[i] <- TRUE
   }
