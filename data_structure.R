@@ -89,3 +89,16 @@ for(i in 1:length(unique_facility)){
   year_flag$lower_alarm[(4*i-3):(4*i)] <- facility$O_E<O_E_lower
   
 } 
+
+
+##MERGE DATA W DFC
+dfc <- read.csv("vwDFC_DLYS_DATA.csv")
+
+library(dplyr)
+dfc <- rename(dfc, id = PROVNUM)
+dfc$id <- as.numeric(as.character(dfc$id))
+flagged <- inner_join(dfc, year_flag, by="id")
+
+upper <- flagged[flagged$upper_alarm==TRUE,]
+
+
